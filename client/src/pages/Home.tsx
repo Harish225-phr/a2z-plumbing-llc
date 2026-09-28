@@ -4,12 +4,16 @@ import { Button } from "@/components/ui/button";
 import { mainServices, MAPS_URL, PHONE_DISPLAY, PHONE_TEL } from "../App";
 
 const services = [
-  {title:"Everyday plumbing repairs", text:"Fixtures, valves, connections, and the issues that interrupt a normal day.", icon:Wrench, href:"/plumbing-repair-fairfield-ca"},
-  {title:"Drains & sewer lines", text:"From a slow sink to a recurring backup, get help understanding the pattern.", icon:Droplets, href:"/drain-cleaning-fairfield-ca"},
-  {title:"Water heaters", text:"Repair or installation guidance for a more reliable hot-water routine.", icon:Flame, href:"/water-heater-repair-fairfield-ca"},
-  {title:"Leaks & urgent issues", text:"Call when water is active, spreading, or needs a prompt next step.", icon:Zap, href:"/emergency-plumber-fairfield-ca"},
-  {title:"Home plumbing", text:"Residential plumbing support designed around your home and your schedule.", icon:House, href:"/residential-plumbing-fairfield-ca"},
-  {title:"Gas line plumbing", text:"Safety-first conversations for gas-line and appliance plumbing needs.", icon:ShieldCheck, href:"/gas-line-plumbing-fairfield-ca"},
+  {title:"Residential Plumbing", text:"Whole-home plumbing support for repairs, fixtures, leaks, and everyday issues.", icon:House, href:"/residential-plumbing-fairfield-ca"},
+  {title:"Emergency Plumber", text:"A calm, direct response for active leaks, burst pipes, and urgent plumbing problems.", icon:Zap, href:"/emergency-plumber-fairfield-ca"},
+  {title:"Plumbing Repair", text:"Practical repair support for noisy, slow, leaking, or unreliable plumbing systems.", icon:Wrench, href:"/plumbing-repair-fairfield-ca"},
+  {title:"Drain Cleaning", text:"Help with slow sinks, backed-up showers, recurring clogs, and drain concerns.", icon:Droplets, href:"/drain-cleaning-fairfield-ca"},
+  {title:"Leak Detection & Repair", text:"Find the source of visible moisture, unexplained water, and active leaks.", icon:ShieldCheck, href:"/leak-detection-repair-fairfield-ca"},
+  {title:"Water Heater Repair", text:"Restore hot water and address inconsistent temperatures, sounds, and leaks.", icon:Flame, href:"/water-heater-repair-fairfield-ca"},
+  {title:"Water Heater Installation", text:"Plan a safe, tidy water-heater installation that fits your home and routine.", icon:Sparkles, href:"/water-heater-installation-fairfield-ca"},
+  {title:"Toilet Repair", text:"Fix running, rocking, clogging, leaking, and other disruptive toilet problems.", icon:Bath, href:"/toilet-repair-fairfield-ca"},
+  {title:"Faucet Repair", text:"Quiet drips, loose handles, under-sink leaks, and everyday fixture issues.", icon:Clock3, href:"/faucet-repair-fairfield-ca"},
+  {title:"Garbage Disposal Repair", text:"Troubleshoot humming, jammed, leaking, or non-starting kitchen disposals.", icon:MapPin, href:"/garbage-disposal-repair-fairfield-ca"},
 ];
 
 const faqs = [

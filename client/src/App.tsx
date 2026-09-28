@@ -1,42 +1,89 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { useEffect } from "react";
+import { Link, Route, Switch, useLocation } from "wouter";
+import {
+  ArrowRight, Bath, ChevronDown, Clock3, Droplets, Flame, House,
+  MapPin, Menu, Phone, ShieldCheck, Sparkles, Wrench, X, Zap
+} from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import Home from "./pages/Home";
 
+export const PHONE = "+1 510-701-2472";
+export const PHONE_TEL = "tel:+15107012472";
+export const MAPS_URL = "https://maps.app.goo.gl/9HrL1aAYbxrksA7t7";
 
-function Router() {
-  return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
-  );
+export const mainServices = [
+  ["Plumber in Fairfield", "/plumber-fairfield"],
+  ["Residential Plumbing", "/residential-plumbing-fairfield"],
+  ["Emergency Plumber", "/emergency-plumber-fairfield"],
+  ["Plumbing Repair", "/plumbing-repair-fairfield"],
+  ["Drain Cleaning", "/drain-cleaning-fairfield"],
+  ["Leak Detection & Repair", "/leak-detection-repair-fairfield"],
+  ["Water Heater Repair", "/water-heater-repair-fairfield"],
+  ["Water Heater Installation", "/water-heater-installation-fairfield"],
+  ["Toilet Repair", "/toilet-repair-fairfield"],
+  ["Faucet Repair", "/faucet-repair-fairfield"],
+  ["Garbage Disposal Repair", "/garbage-disposal-repair-fairfield"],
+  ["Sewer Line Repair", "/sewer-line-repair-fairfield"],
+  ["Repiping", "/repiping-fairfield"],
+  ["Gas Line Plumbing", "/gas-line-plumbing-fairfield"],
+] as const;
+
+const locationPages = [
+  ["Fairfield", "/plumber-fairfield", "Full-service plumbing support for homes and businesses in Fairfield."],
+  ["Suisun City", "/plumber-suisun-city", "Responsive plumbing service for homes and businesses in Suisun City."],
+] as const;
+
+const icons = [Droplets, Wrench, Zap, Bath, Flame, House];
+
+function Header() {
+  const [open, setOpen] = useState(false);
+  const [location] = useLocation();
+  useEffect(() => setOpen(false), [location]);
+  return <>
+    <div className="topbar"><div className="container topbar-inner"><span><Clock3 size={14}/> Open 24 hours</span><span className="topbar-sep">•</span><span>Serving Fairfield & Suisun City</span><a href={PHONE_TEL}><Phone size={14}/> {PHONE}</a></div></div>
+    <header className="site-header">
+      <div className="container nav-inner">
+        <Link href="/" className="brand" aria-label="A2Z Plumbing LLC home"><span className="brand-mark"><Droplets size={19}/></span><span>A2Z <b>PLUMBING</b><small>LLC</small></span></Link>
+        <nav className="desktop-nav"><a href="/#services">Services</a><a href="/#why-us">Why A2Z</a><a href="/#service-areas">Service Areas</a><a href="/#faqs">FAQs</a></nav>
+        <div className="nav-actions"><a className="nav-phone" href={PHONE_TEL}><Phone size={16}/> <span>{PHONE}</span></a><Button asChild className="btn-copper"><a href={PHONE_TEL}>Call Now <ArrowRight size={16}/></a></Button><button className="menu-btn" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>{open ? <X/> : <Menu/>}</button></div>
+      </div>
+      {open && <div className="mobile-nav"><a href="/#services">Services</a><a href="/#why-us">Why A2Z</a><a href="/#service-areas">Service Areas</a><a href="/#faqs">FAQs</a><a className="mobile-call" href={PHONE_TEL}><Phone size={16}/> Call {PHONE}</a></div>}
+    </header>
+  </>;
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
+function Footer() {
+  return <footer className="footer"><div className="container footer-grid"><div><Link href="/" className="brand brand-light"><span className="brand-mark"><Droplets size={19}/></span><span>A2Z <b>PLUMBING</b><small>LLC</small></span></Link><p className="footer-lede">Thoughtful plumbing service for the homes and businesses that keep Solano County moving.</p><a className="footer-call" href={PHONE_TEL}><Phone size={16}/> {PHONE}</a></div><div><h4>Services</h4>{mainServices.slice(0,6).map(([label, href]) => <Link key={href} href={href}>{label.replace(" in Fairfield", "")}</Link>)}</div><div><h4>Service Areas</h4>{locationPages.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}<a href={MAPS_URL} target="_blank" rel="noreferrer">Google Maps listing <ArrowRight size={13}/></a></div><div><h4>Get in touch</h4><p>Need a plumber? Let’s talk through the issue and the next best step.</p><Button asChild className="btn-copper"><a href={PHONE_TEL}>Speak with a plumber <Phone size={15}/></a></Button></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} A2Z Plumbing LLC. All rights reserved.</span><span>Fairfield, California</span></div></footer>;
 }
 
-export default App;
+const serviceMeta: Record<string, {title:string; eyebrow:string; intro:string; details:string[]; image:string; related:string[]}> = {
+  "plumber-fairfield": { title:"Plumber in Fairfield, CA", eyebrow:"LOCAL PLUMBING SUPPORT", intro:"A2Z Plumbing LLC provides practical, responsive plumbing service for Fairfield homes and businesses. From a small fixture issue to an urgent leak, call for a clear next step.", details:["Every plumbing visit starts with listening to the problem, looking at the system, and explaining the repair path in plain language.","Our Fairfield service mix covers repairs, fixture work, drains, water heaters, leak concerns, repiping, and more.","When timing matters, call directly so we can understand the situation and help you decide what to do next."], image:"https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1400&q=85", related:["/residential-plumbing-fairfield","/emergency-plumber-fairfield","/plumbing-repair-fairfield"] },
+  "residential-plumbing-fairfield": { title:"Residential Plumbing in Fairfield, CA", eyebrow:"HOME PLUMBING", intro:"Comfortable homes depend on plumbing that works quietly and reliably. A2Z Plumbing helps Fairfield homeowners with repairs, upgrades, and the everyday issues that interrupt a normal day.", details:["We work through common home plumbing concerns such as dripping fixtures, slow drains, toilet problems, water heater issues, and visible leaks.","Good residential service means protecting finishes, communicating clearly, and leaving the next step easy to understand.","If the issue is active or worsening, call rather than waiting for a small problem to become a larger one."], image:"https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85", related:["/toilet-repair-fairfield","/faucet-repair-fairfield","/water-heater-repair-fairfield"] },
+  "emergency-plumber-fairfield": { title:"Emergency Plumber in Fairfield, CA", eyebrow:"WHEN THE WATER WON'T WAIT", intro:"Burst pipes, active leaks, overflowing fixtures, and sudden loss of water need a calm, direct response. Call A2Z Plumbing in Fairfield and describe what you are seeing.", details:["If water is actively escaping, shut off the nearest fixture valve or main water supply if it is safe to do so.","We help you identify the immediate priority, reduce further water exposure, and determine the right repair conversation.","Keep the area clear and avoid electrical contact around standing water. Then call for a plumber."], image:"https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1400&q=85", related:["/leak-detection-repair-fairfield","/plumbing-repair-fairfield","/drain-cleaning-fairfield"] },
+  "plumbing-repair-fairfield": { title:"Plumbing Repair in Fairfield, CA", eyebrow:"REPAIR WITH A PLAN", intro:"When a plumbing system is noisy, slow, leaking, or simply not working as it should, the right repair begins with a useful diagnosis. A2Z Plumbing serves Fairfield with practical repair support.", details:["Repairs may involve fixtures, supply lines, drains, valves, toilets, water heaters, or other visible plumbing components.","We focus on understanding the cause, not just quieting the symptom for a few days.","Call to talk through the issue and the conditions around it—what changed, where it appears, and how quickly it is progressing."], image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1400&q=85", related:["/leak-detection-repair-fairfield","/faucet-repair-fairfield","/toilet-repair-fairfield"] },
+  "drain-cleaning-fairfield": { title:"Drain Cleaning in Fairfield, CA", eyebrow:"CLEARER DRAINS, LESS GUESSWORK", intro:"Slow sinks, backed-up showers, and recurring clogs are signs that a drain needs more than another quick rinse. A2Z Plumbing helps Fairfield customers get to the cause.", details:["We can help with kitchen, bathroom, shower, floor, and other common household drain concerns.","Recurring backups can point to buildup, an obstruction, or a larger line issue; the pattern matters.","Call when a drain is slowing down repeatedly, backing up, or creating odors you cannot resolve."], image:"https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1400&q=85", related:["/sewer-line-repair-fairfield","/emergency-plumber-fairfield","/plumbing-repair-fairfield"] },
+  "leak-detection-repair-fairfield": { title:"Leak Detection & Repair in Fairfield, CA", eyebrow:"FIND THE SOURCE", intro:"A damp cabinet, unexplained water bill, ceiling mark, or hissing sound can all point to a leak. A2Z Plumbing helps Fairfield homeowners narrow down the source and the next repair step.", details:["Leaks do not always appear where the water begins, which is why location and timing are helpful clues.","We look at visible plumbing, fixtures, connections, and the surrounding signs before recommending a repair path.","If you see active water, move belongings away and call promptly to limit damage."], image:"https://images.unsplash.com/photo-1581244277943-fe4a9c777189?auto=format&fit=crop&w=1400&q=85", related:["/emergency-plumber-fairfield","/repiping-fairfield","/plumbing-repair-fairfield"] },
+  "water-heater-repair-fairfield": { title:"Water Heater Repair in Fairfield, CA", eyebrow:"HOT WATER, RESTORED", intro:"A cold shower, rumbling tank, inconsistent temperature, or visible moisture around a water heater deserves attention. A2Z Plumbing helps Fairfield customers work through water-heater problems.", details:["Tell us what changed: no hot water, lukewarm water, unusual sounds, a pilot issue, or a leak.","We can help distinguish a repair concern from a replacement conversation based on the system and the symptoms.","Do not touch gas controls or electrical components if you are unsure—call for guidance."], image:"https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1400&q=85", related:["/water-heater-installation-fairfield","/gas-line-plumbing-fairfield","/plumbing-repair-fairfield"] },
+  "water-heater-installation-fairfield": { title:"Water Heater Installation in Fairfield, CA", eyebrow:"A BETTER FIT FOR YOUR HOME", intro:"A new water heater should match the household, the available space, and the way hot water is used. A2Z Plumbing helps Fairfield customers plan a safe, tidy installation.", details:["The right conversation includes system type, capacity, placement, access, and the condition of existing connections.","We can help you understand the practical tradeoffs between repair and replacement before work begins.","Call to talk through the current unit, its age, and the hot-water pattern in your home."], image:"https://images.unsplash.com/photo-1617104551722-3b2d51366400?auto=format&fit=crop&w=1400&q=85", related:["/water-heater-repair-fairfield","/gas-line-plumbing-fairfield","/residential-plumbing-fairfield"] },
+  "toilet-repair-fairfield": { title:"Toilet Repair in Fairfield, CA", eyebrow:"SMALL FIXTURES, BIG DISRUPTION", intro:"A running, rocking, clogging, or leaking toilet can waste water and disrupt a bathroom quickly. A2Z Plumbing provides Fairfield toilet repair for common fixture problems.", details:["Symptoms such as a weak flush, constant running, water at the base, or repeated clogs help point toward the cause.","We can help with fixture components, supply connections, seals, and replacement conversations when needed.","If a toilet is overflowing, shut off its supply valve and call for help."], image:"https://images.unsplash.com/photo-1584622781867-1f5b3f6f2b85?auto=format&fit=crop&w=1400&q=80", related:["/residential-plumbing-fairfield","/plumbing-repair-fairfield","/emergency-plumber-fairfield"] },
+  "faucet-repair-fairfield": { title:"Faucet Repair in Fairfield, CA", eyebrow:"QUIET THE DRIP", intro:"A dripping faucet, stiff handle, loose base, or under-sink leak is more than an annoyance. A2Z Plumbing helps Fairfield homes and businesses restore everyday fixtures.", details:["We work through the type of faucet, the symptom, and the condition of the connections before choosing repair or replacement.","A small leak under a sink can affect cabinetry and flooring, so call if moisture is spreading.","Bring a photo or description of the fixture when you call so we can start with useful context."], image:"https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1400&q=85", related:["/plumbing-repair-fairfield","/residential-plumbing-fairfield","/leak-detection-repair-fairfield"] },
+  "garbage-disposal-repair-fairfield": { title:"Garbage Disposal Repair in Fairfield, CA", eyebrow:"KITCHEN PLUMBING", intro:"A humming, jammed, leaking, or non-starting garbage disposal can bring a kitchen routine to a stop. A2Z Plumbing helps Fairfield customers troubleshoot the next right move.", details:["Describe the sound, whether the unit drains, and whether it has power when you call.","Never put hands into a disposal. Turn it off at the switch and disconnect power before checking anything visible.","If a disposal leak is reaching the cabinet base, call promptly to protect the surrounding area."], image:"https://images.unsplash.com/photo-1556912173-3bb406ef7e77?auto=format&fit=crop&w=1400&q=85", related:["/plumbing-repair-fairfield","/drain-cleaning-fairfield","/residential-plumbing-fairfield"] },
+  "sewer-line-repair-fairfield": { title:"Sewer Line Repair in Fairfield, CA", eyebrow:"WHEN THE MAIN LINE IS INVOLVED", intro:"Repeated backups, slow drains throughout the home, or unusual yard moisture can signal a larger sewer-line concern. A2Z Plumbing helps Fairfield customers understand the pattern and options.", details:["A single slow fixture and a whole-home backup tell different stories; note where the symptoms appear.","We help frame the issue around access, urgency, and the condition of the line before discussing repair routes.","If wastewater is backing up, keep people and pets away from the affected area and call."], image:"https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=85", related:["/drain-cleaning-fairfield","/repiping-fairfield","/emergency-plumber-fairfield"] },
+  "repiping-fairfield": { title:"Repiping in Fairfield, CA", eyebrow:"A LONG-TERM PLUMBING CONVERSATION", intro:"When a home has recurring leaks, poor pressure, or aging supply lines, repiping may be part of the conversation. A2Z Plumbing helps Fairfield homeowners evaluate the practical signs.", details:["A repipe decision considers the age and material of existing lines, the pattern of repairs, pressure, access, and the home's layout.","We focus on explaining what a project could involve rather than assuming replacement is always the answer.","Call if you are seeing repeated supply-line leaks or planning a broader plumbing update."], image:"https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1400&q=85", related:["/leak-detection-repair-fairfield","/plumbing-repair-fairfield","/residential-plumbing-fairfield"] },
+  "gas-line-plumbing-fairfield": { title:"Gas Line Plumbing in Fairfield, CA", eyebrow:"SAFETY-FIRST SERVICE", intro:"Gas-line concerns require care, clear communication, and the right next step. A2Z Plumbing helps Fairfield customers address gas-line plumbing questions and service needs.", details:["If you smell gas, leave the area immediately and call your gas utility or emergency services from a safe location.","For non-emergency plumbing questions, share the appliance, location, and what changed so the situation can be understood.","Never attempt to modify or test a gas connection without qualified help."], image:"https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1400&q=85", related:["/water-heater-repair-fairfield","/water-heater-installation-fairfield","/emergency-plumber-fairfield"] },
+};
+
+export function Seo({title, description}:{title:string;description:string}) { useEffect(() => { document.title=title; const meta=document.querySelector('meta[name="description"]'); if(meta) meta.setAttribute("content",description); let canonical=document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null; if(canonical) canonical.href=window.location.href.split("#")[0]; },[title,description]); return null; }
+
+export function JsonLd({data}:{data:Record<string, unknown>}) { useEffect(() => { const script=document.createElement("script"); script.type="application/ld+json"; script.textContent=JSON.stringify(data); document.head.appendChild(script); return () => { document.head.removeChild(script); }; },[data]); return null; }
+
+function ServicePage({slug}:{slug:string}) { const meta=serviceMeta[slug]; if(!meta) return <NotFound/>; const schema={"@context":"https://schema.org","@type":"Service",name:meta.title,description:meta.intro,provider:{"@type":"LocalBusiness",name:"A2Z Plumbing LLC",telephone:PHONE,address:{"@type":"PostalAddress",addressLocality:"Fairfield",addressRegion:"CA",postalCode:"94534",addressCountry:"US"}},areaServed:{"@type":"City",name:"Fairfield"}}; return <><Seo title={`${meta.title} | A2Z Plumbing LLC`} description={`${meta.title}. ${meta.intro}`} /><JsonLd data={schema}/><div className="page-shell"><main><section className="service-hero"><div className="container service-hero-grid"><div><div className="eyebrow"><span className="eyebrow-dot"/>{meta.eyebrow}</div><h1>{meta.title}</h1><p className="hero-copy">{meta.intro}</p><div className="hero-actions"><Button asChild className="btn-copper"><a href={PHONE_TEL}><Phone size={17}/> Call Now</a></Button><a className="text-link light-link" href="#service-details">Explore service details <ArrowRight size={16}/></a></div></div><div className="service-hero-image"><img src={meta.image} alt={`${meta.title} plumbing service`} /><div className="image-note"><ShieldCheck size={17}/><span>Clear communication.<br/><b>Practical next steps.</b></span></div></div></div></section><section id="service-details" className="content-section"><div className="container detail-grid"><div><div className="eyebrow dark-eyebrow">A2Z APPROACH</div><h2>Plumbing help that starts with listening.</h2></div><div className="detail-copy">{meta.details.map((d,i)=><div className="detail-row" key={i}><span>0{i+1}</span><p>{d}</p></div>)}</div></div></section><section className="soft-section"><div className="container two-col"><div><div className="eyebrow dark-eyebrow">COMMON QUESTIONS</div><h2>What to know before you call.</h2><p>Every plumbing situation is a little different. These quick notes can help you explain what is happening and protect your home while you decide on service.</p></div><div className="faq-stack"><details open><summary>How do I know if this is urgent? <ChevronDown size={18}/></summary><p>Active water, wastewater backup, a gas smell, or a rapidly worsening problem deserves a prompt call. When in doubt, call and describe the symptoms.</p></details><details><summary>What should I have ready? <ChevronDown size={18}/></summary><p>Share the location, what changed, how long it has been happening, and whether water is actively escaping. A photo can also be helpful.</p></details><details><summary>Do you serve nearby homes too? <ChevronDown size={18}/></summary><p>Yes. A2Z Plumbing is based in Fairfield and also serves nearby Suisun City. Call to discuss your address and plumbing need.</p></details></div></div></section><section className="related-section"><div className="container"><div className="section-heading"><div><div className="eyebrow dark-eyebrow">KEEP EXPLORING</div><h2>More ways we can help.</h2></div><Button asChild className="btn-navy"><a href={PHONE_TEL}>Speak with a plumber <Phone size={16}/></a></Button></div><div className="related-grid">{meta.related.map(href=>{const label=mainServices.find(s=>s[1]===href)?.[0] ?? "Plumbing service"; return <Link className="related-card" href={href} key={href}><span>{label}</span><ArrowRight size={18}/></Link>})}</div></div></section></main></div></>; }
+
+function LocationPage({city}:{city:string}) { const isFairfield=city==="Fairfield"; const slug=isFairfield?"plumber-fairfield":"plumber-suisun-city"; const title=`Plumber in ${city}, CA`; return <><Seo title={`${title} | A2Z Plumbing LLC`} description={`Call A2Z Plumbing LLC for responsive plumbing service in ${city}, California.`}/><div className="page-shell"><section className="location-hero"><div className="container"><div className="eyebrow dark-eyebrow">LOCAL SERVICE AREA</div><h1>{title}</h1><p className="location-lede">A2Z Plumbing LLC helps homeowners and businesses in {city} with practical plumbing repairs, fixture service, drain work, water heater support, and more.</p><Button asChild className="btn-copper"><a href={PHONE_TEL}><Phone size={17}/> Call {PHONE}</a></Button></div></section><section className="content-section"><div className="container two-col location-content"><div><h2>Plumbing support close to home.</h2><p>{isFairfield?"Fairfield is the main location for A2Z Plumbing LLC. Customers call for clear help with everyday plumbing issues, urgent leaks, fixture repairs, and larger system questions.":"Suisun City is a nearby community served by A2Z Plumbing LLC. If a drain is slowing, a fixture is leaking, or hot water has disappeared, call to talk through the issue."}</p><p>We keep the conversation focused on your actual symptoms, your property, and the next useful step.</p></div><div className="location-panel"><MapPin size={20}/><h3>Serving {city}</h3><p>Call now to confirm availability for your address and plumbing need.</p><a className="text-link" href={PHONE_TEL}>Speak with a plumber <ArrowRight size={15}/></a></div></div></section><section className="soft-section"><div className="container"><div className="section-heading"><div><div className="eyebrow dark-eyebrow">POPULAR SERVICES</div><h2>Start with the issue you’re seeing.</h2></div></div><div className="service-grid">{mainServices.slice(1,7).map(([label,href],i)=>{const Icon=icons[i]; return <Link href={href} className="service-card" key={href}><span className="icon-box"><Icon size={20}/></span><h3>{label.replace(" in Fairfield", "")}</h3><p>Clear guidance and practical plumbing support.</p><ArrowRight size={17}/></Link>})}</div></div></section></div></>; }
+
+function NotFound(){return <div className="not-found"><h1>Page not found</h1><p>Let’s get you back to dependable plumbing help.</p><Button asChild className="btn-copper"><Link href="/">Back to home</Link></Button></div>}
+
+function Router(){return <Switch><Route path="/" component={Home}/>{mainServices.map(([_,href])=><Route key={href} path={href}><ServicePage slug={href.slice(1)}/></Route>)}<Route path="/plumber-suisun-city"><LocationPage city="Suisun City"/></Route><Route path="/plumbing-services-suisun-city"><LocationPage city="Suisun City"/></Route><Route path="/plumbing-services-fairfield"><LocationPage city="Fairfield"/></Route><Route component={NotFound}/></Switch>}
+
+export default function App(){return <><Header/><Router/><Footer/><a className="sticky-call" href={PHONE_TEL}><Phone size={18}/> Call Now</a></>}
